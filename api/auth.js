@@ -1,3 +1,4 @@
-import axios from '@/libs/axios';
-
-export const register = (params) => axios.post('/register', params).then((_) => _.data);
+export default (axios) => ({
+    updateProfile: (data) => axios.post('/user/update_profile', data).then((_) => _.data),
+    updatePassword: (data) => axios.post('/user/change_password', data).then((_) => _.data),
+});

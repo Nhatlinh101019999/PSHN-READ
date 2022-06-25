@@ -1,7 +1,13 @@
 <template>
-  <Tutorial/>
+    <div>Dashboard</div>
 </template>
 
 <script>
-export default {}
+    export default {
+        head() {
+            return {
+                title: 'Trang chủ | EziHotel',
+            };
+        },
+    };
 </script>

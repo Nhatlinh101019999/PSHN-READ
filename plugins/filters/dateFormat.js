@@ -1,3 +1,4 @@
+import vi from 'date-fns/locale/vi';
 import { format } from 'date-fns';
 import { parseDateString } from '@/utils/date';
 
@@ -6,8 +7,8 @@ import { parseDateString } from '@/utils/date';
  * @param {string} format
  * @param {string|null} fromFormat
  */
-export default function (date, toFormat = 'dd/MM/yyyy', fromFormat) {
+export default (date, toFormat = 'dd/MM/yyyy', fromFormat = 'T') => {
     const then = typeof date === 'string' ? parseDateString(date, fromFormat) : date;
 
-    return then ? format(then, toFormat) : null;
-}
+    return then ? format(then, toFormat, { locale: vi }) : null;
+};
