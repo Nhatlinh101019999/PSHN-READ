@@ -15,7 +15,7 @@ export default {
     },
 
     head: {
-        title: 'pshn',
+        title: 'Phụ sản Hà Nội',
         htmlAttrs: {
             lang: 'en',
         },
@@ -26,7 +26,7 @@ export default {
             { name: 'format-detection', content: 'telephone=no' },
         ],
         link: [
-            { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+            { rel: 'icon', type: 'image/x-icon', href: '/XMLID_1_.ico' },
         ],
     },
 

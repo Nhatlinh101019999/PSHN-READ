@@ -9,6 +9,18 @@ module.exports = {
             boxShadow: {
                 '3xl': '0px 1px 0px #D7DAE7',
             },
+            screens: {
+                maxMd: { max: '788px' },
+            },
+            borderRadius: {
+                none: '0px',
+                sm: '4px',
+                DEFAULT: '8px',
+                md: '10px',
+                lg: '16px',
+                xl: '20px',
+                full: '9999px',
+            },
         },
         colors: {
             transparent: 'transparent',
@@ -38,6 +50,11 @@ module.exports = {
             },
             green: {
                 100: '#00A96C',
+                20: '#89c43b',
+                10: '#14803b',
+                5: '#8BC63E1A',
+                1: '#67C23A',
+                0: '#E1F3D8',
             },
             red: {
                 100: '#E82727',
@@ -103,17 +120,6 @@ module.exports = {
             '6xl': ['46px', { lineHeight: '54px' }],
             '7xl': ['56px', { lineHeight: '64px' }],
         },
-        borderRadius: {
-            none: '0px',
-            sm: '4px',
-            DEFAULT: '8px',
-            md: '10px',
-            lg: '16px',
-            xl: '20px',
-            full: '9999px',
-        },
     },
-    plugins: [
-        require('@tailwindcss/line-clamp'),
-    ],
+    plugins: [require('@tailwindcss/line-clamp')],
 };
