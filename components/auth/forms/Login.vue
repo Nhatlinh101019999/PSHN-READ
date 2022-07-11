@@ -5,38 +5,38 @@
         :rules="rules"
         class="login-form space-y-4"
     >
-        <a-form-model-item prop="username">
+        <a-form-model-item prop="username" label="Tài khoản" class="font-semibold">
             <a-input
                 v-model="form.username"
                 size="large"
-                placeholder="Tên đăng nhập"
+                placeholder="Nhập tên tài khoản"
                 @keyup.native.enter="handleSubmit"
-            >
-                <template #prefix>
-                    <i class="far fa-user text-prim-90" />
-                </template>
-            </a-input>
+            />
         </a-form-model-item>
-        <a-form-model-item prop="password">
+        <a-form-model-item prop="password" label="Mật khẩu" class="font-semibold">
             <a-input-password
                 v-model="form.password"
                 size="large"
-                placeholder="Mật khẩu"
+                placeholder="Nhập mật khẩu"
                 @keyup.native.enter="handleSubmit"
-            >
-                <template #prefix>
-                    <i class="fas fa-unlock-alt text-prim-90" />
-                </template>
-            </a-input-password>
+            />
         </a-form-model-item>
+        <div class="flex justify-between">
+            <a-checkbox @change="onChange">
+                Nhớ mật khẩu
+            </a-checkbox>
+            <nuxt-link class="hover:!text-green-100 !underline hover:underline-offset-2" to="login/forgot-password">
+                Quên mật khẩu?
+            </nuxt-link>
+        </div>
         <a-button
             :loading="loading"
             type="primary"
             size="large"
-            class="w-full"
+            class="w-full !bg-gradient-to-tr from-green-10 to-green-20 !border-none !rounded-sm"
             @click="handleSubmit"
         >
-            Đăng nhập
+            Xác nhận
         </a-button>
     </a-form-model>
 </template>
@@ -62,10 +62,18 @@
                 form: _cloneDeep(defaultForm),
                 rules: {
                     username: [
-                        { required: true, message: 'Vui lòng nhập tên đăng nhập', trigger: 'blur' },
+                        {
+                            required: true,
+                            message: 'Vui lòng nhập tên đăng nhập',
+                            trigger: 'blur',
+                        },
                     ],
                     password: [
-                        { required: true, message: 'Vui lòng nhập mật khẩu', trigger: 'blur' },
+                        {
+                            required: true,
+                            message: 'Vui lòng nhập mật khẩu',
+                            trigger: 'blur',
+                        },
                     ],
                 },
             };
@@ -79,14 +87,7 @@
                     }
                 });
             },
+            onChange() {},
         },
     };
 </script>
-
-<style lang="scss">
-    .login-form {
-        .ant-input::placeholder {
-            @apply text-center;
-        }
-    }
-</style>
