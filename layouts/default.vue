@@ -1,13 +1,11 @@
 <template>
-    <div class="flex justify-between bg-[#f8f8f8] min-h-screen">
+    <div class="flex justify-between bg-[#f8f8f8] h-screen">
         <div class="hidden md:block">
-            <TheSidebar />
+            <TheSidebar class="border-r border-gray-10" />
         </div>
         <div class="flex-grow flex flex-col h-screen overflow-x-hidden">
             <TheHeader />
-            <div class="flex-grow overflow-y-auto max-h-screen custom-scroll">
-                <Nuxt />
-            </div>
+            <Nuxt class="flex-grow overflow-y-auto p-4 custom-scroll" />
         </div>
     </div>
 </template>

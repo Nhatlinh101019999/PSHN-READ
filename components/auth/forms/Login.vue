@@ -3,7 +3,7 @@
         ref="form"
         :model="form"
         :rules="rules"
-        class="login-form space-y-4"
+        class="space-y-4"
     >
         <a-form-model-item prop="username" label="Tài khoản" class="font-semibold">
             <a-input

@@ -69,6 +69,7 @@ export default {
 
     buildModules: [
         '@nuxt/postcss8',
+        '@nuxtjs/google-fonts',
         '@nuxtjs/eslint-module',
         '@nuxtjs/fontawesome',
         '@nuxtjs/tailwindcss',
@@ -80,6 +81,16 @@ export default {
         '@nuxtjs/auth-next',
     ],
 
+    googleFonts: {
+        prefetch: true,
+        preconnect: true,
+        preload: true,
+        download: false,
+        families: {
+            'Be+Vietnam+Pro': [300, 400, 600, 900],
+        },
+    },
+
     axios: {
         baseURL: process.env.API_HOST,
     },
@@ -88,30 +99,26 @@ export default {
         strategies: {
             local: {
                 token: {
-                    property: 'data.sid',
+                    property: 'data.accessToken',
                     global: true,
                     required: true,
-                    name: 'auth',
                     maxAge: 60 * 60 * 24 * 30, // 1 month
-                    type: false,
+                    type: 'Bearer',
                 },
                 autoLogout: false,
                 user: {
-                    property: 'data.account',
+                    property: 'data.admin',
                     autoFetch: true,
                 },
                 endpoints: {
                     login: {
-                        url: `${process.env.API_HOST}/user/login`,
+                        url: `${process.env.API_HOST}/a/sessions/login`,
                         method: 'POST',
                     },
-                    logout: {
-                        url: `${process.env.API_HOST}/user/logout`,
-                        method: 'GET',
-                    },
+                    logout: false,
                     user: {
-                        url: `${process.env.API_HOST}/user/get_profile`,
-                        method: 'POST',
+                        url: `${process.env.API_HOST}/a/sessions/current`,
+                        method: 'GET',
                     },
                 },
                 redirect: {

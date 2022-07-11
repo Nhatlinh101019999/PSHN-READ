@@ -10,7 +10,7 @@
             <a-menu
                 :default-selected-keys="activeKeys"
                 :open-keys.sync="openKeys"
-                class="h-auto"
+                class="h-auto !ml-3"
                 @click="handleClick"
             >
                 <a-sub-menu v-for="item in menuItems" :key="item.id" class="hover:!text-green-100 p-2">
@@ -27,12 +27,12 @@
         <div class="flex flex-col p-4 border-t-2 border-gray-5">
             <div class="flex items-center mb-2">
                 <button>
-                    <a-avatar class="shrink-0">
+                    <a-avatar class="shrink-0 border border-gray-10" :src="authUser.avatar" :size="48">
                         <i class="fas fa-user" />
                     </a-avatar>
                 </button>
                 <nuxt-link class="pl-4 grow hover:!text-green-100" to="/">
-                    Nguyễn Hoàng Tuấn Anh
+                    {{ authUser.fullName }}
                 </nuxt-link>
             </div>
             <a-button
@@ -40,7 +40,7 @@
                 type="primary"
                 size="large"
                 class="w-full !bg-gradient-to-tr from-green-10 to-green-20 !border-none !rounded-sm"
-                @click="handleSubmit"
+                @click="logout"
             >
                 <i class="fas fa-sign-out-alt pr-2" />
                 Đăng xuất
@@ -141,6 +141,10 @@
         computed: {
             ...mapGetters(['menuItems']),
 
+            authUser() {
+                return this.$auth.user || {};
+            },
+
             activeKeys() {
                 return [this.$route.path];
             },
@@ -155,7 +159,11 @@
             handleClick(link) {
                 this.$router.push(link.key);
             },
-            handleSubmit() {},
+
+            async logout() {
+                await this.$auth.logout();
+                this.$router.push('/login');
+            },
         },
     };
 </script>

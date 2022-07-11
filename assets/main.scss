@@ -2,12 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
-html {
-    font-family: 'Be Vietnam Pro', sans-serif;
-    word-break: break-word !important;
-}
-
 body {
+    font-family: 'Be Vietnam Pro', sans-serif !important;
+    word-break: break-word !important;
     @apply text-base text-gray-100 #{!important};
 }
 
