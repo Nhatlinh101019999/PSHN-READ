@@ -9,12 +9,12 @@
         </template>
         <slot v-else />
         <div slot="footer" class="flex justify-center items-center gap-2">
-            <a-button class="w-28" @click="handleCancel">
+            <a-button class="w-28 !rounded-md" @click="handleCancel">
                 Hủy bỏ
             </a-button>
             <a-button
                 :loading="loading"
-                class="w-28"
+                class="w-28 !bg-gradient-to-tr from-green-10 to-green-20 !border-none !rounded-md"
                 :type="confirmBtnType"
                 @click="handleConfirm"
             >

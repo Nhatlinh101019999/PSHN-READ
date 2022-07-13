@@ -172,5 +172,6 @@ export default {
 
     env: {
         API_HOST: process.env.API_HOST || 'localhost',
+        IMAGE_BASE_URL: process.env.IMAGE_BASE_URL,
     },
 };
