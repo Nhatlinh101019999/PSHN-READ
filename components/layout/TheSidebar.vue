@@ -2,7 +2,7 @@
     <div class="!w-[256px] bg-white a-the-sidebar-vertical max-h-screen h-full flex flex-col justify-between shadow-xl">
         <div>
             <div class="flex justify-between items-center py-4 maxMd:hidden">
-                <img src="/images/PSHN/XMLID_1_.png" class="pl-6">
+                <img src="/images/logo.png" class="!w-3/5 pl-6">
                 <button>
                     <i class="far fa-bell pr-4 text-xl hover:text-green-100" />
                 </button>
@@ -13,14 +13,25 @@
                 class="h-auto !ml-3"
                 @click="handleClick"
             >
-                <a-sub-menu v-for="item in menuItems" :key="item.id" class="hover:!text-green-100 p-2">
+                <a-sub-menu
+                    v-for="item in menuItems"
+                    :key="item.id"
+                    class="hover:!text-green-100 p-2"
+                >
                     <template slot="title">
                         <i :class="item.icon" class="w-5" />
                         <span class="!pl-2 w-full !text-lg">{{ item.description }}</span>
                     </template>
-                    <a-menu-item v-for="subMenu in item.subMenus" :key="subMenu.id">
-                        {{ subMenu.subTitle }}
-                    </a-menu-item>
+                    <a-sub-menu v-for="subMenu in item.subMenus" :key="subMenu.id" class="w-56 hover:!text-green-100 p-2">
+                        <template slot="title">
+                            <i :class="subMenu.icon" class="w-5" />
+                            <span class="!pl-2 w-full !text-lg">{{ subMenu.subTitle }}</span>
+                        </template>
+
+                        <a-menu-item v-for="subMenu1 in subMenu.subMenus" :key="subMenu1.link">
+                            <span class="!pl-2 w-full !text-lg">{{ subMenu1.subTitle }}</span>
+                        </a-menu-item>
+                    </a-sub-menu>
                 </a-sub-menu>
             </a-menu>
         </div>
@@ -36,10 +47,9 @@
                 </nuxt-link>
             </div>
             <a-button
-                :loading="loading"
                 type="primary"
                 size="large"
-                class="w-full !bg-gradient-to-tr from-green-10 to-green-20 !border-none !rounded-sm"
+                class="w-full bg-button !border-none !rounded-sm"
                 @click="logout"
             >
                 <i class="fas fa-sign-out-alt pr-2" />
@@ -50,7 +60,7 @@
 </template>
 
 <script>
-    import { mapGetters } from 'vuex';
+    // import { mapGetters } from 'vuex';
 
     export default {
         data() {
@@ -103,9 +113,34 @@
                         id: '7',
                         description: 'Tiện ích',
                         subMenus: [
-                            { id: '7.1', subTitle: 'text 1', link: '/' },
-                            { id: '7.2', subTitle: 'text 2', link: '/' },
-                            { id: '7.3', subTitle: 'text 3', link: '/' },
+                            { id: '7.1', subTitle: 'Dự sinh', link: '/' },
+                            {
+                                id: '7.2', subTitle: 'Tổng đài', link: '/', icon: 'fas fa-phone-alt',
+                            },
+                            {
+                                id: '7.3',
+                                subTitle: 'Dinh dưỡng',
+                                link: '/',
+                                icon: 'fas fa-hamburger',
+                                subMenus: [
+                                    { id: '7.3.1', subTitle: 'Danh mục', link: '/utilities/nutritions' },
+                                    {
+                                        id: '7.3.2', subTitle: 'Danh sách thực phẩm', link: '/utilities/foods',
+                                    },
+                                ],
+                            },
+                            {
+                                id: '7.4', subTitle: 'Trắc nghiệm', link: '/', icon: 'fas fa-question',
+                            },
+                            {
+                                id: '7.5', subTitle: 'Checklist', link: '/', icon: 'fas fa-list-alt',
+                            },
+                            {
+                                id: '7.6', subTitle: 'Góp ý', link: '/', icon: 'fas fa-comments',
+                            },
+                            {
+                                id: '7.7', subTitle: 'Địa chỉ', link: '/', icon: 'fas fa-map-marker-alt',
+                            },
                         ],
                         link: '/utilities',
                         icon: 'fas fa-shapes',
@@ -139,7 +174,7 @@
         },
 
         computed: {
-            ...mapGetters(['menuItems']),
+            // ...mapGetters(['menuItems']),
 
             authUser() {
                 return this.$auth.user || {};
@@ -152,7 +187,7 @@
 
         async mounted() {
             this.collapsed = localStorage.getItem('collapsed') || false;
-            await this.$store.dispatch('fetchMenuItems');
+            // await this.$store.dispatch('fetchMenuItems');
         },
 
         methods: {
@@ -164,6 +199,7 @@
                 await this.$auth.logout();
                 this.$router.push('/login');
             },
+            handleSubmit() {},
         },
     };
 </script>

@@ -46,3 +46,12 @@ a {
         }
     }
 }
+.title {
+    @apply font-semibold text-2xl leading-7 text-gray-100;
+    &-button {
+        @apply font-semibold text-base leading-5;
+    }
+}
+.bg-button {
+    @apply bg-gradient-to-tr from-green-10 to-green-20 #{!important};
+}

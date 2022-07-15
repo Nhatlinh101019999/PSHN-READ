@@ -111,6 +111,7 @@
 
 // Input
 .ant-input, .ant-input-number {
+    @apply !rounded-lg;
     &-disabled {
         @apply !text-gray-100 !bg-white;
     }
@@ -182,6 +183,15 @@
         top: -9px;
         right: 20px;
     }
+    &-content {
+        @apply !rounded-lg;
+    }
+    &-body { 
+        @apply !p-6;
+    }
+    &-header {
+        @apply !rounded-lg;
+    }
 }
 
 // Tab
@@ -215,6 +225,8 @@
         right: 5px;
         @apply relative;
     }
+    @apply !rounded-lg; 
+    
 }
 
 // Pagination
@@ -228,5 +240,17 @@
 .ant-fullcalendar {
     &-date {
         height: 100px;
+    }
+}
+//Upload 
+.ant-upload {
+    @apply !w-24 !h-24 !flex justify-center items-center !p-0 !rounded-lg;
+    &-select-picture-card {
+        i {
+            @apply !text-3xl text-gray-60;
+        }
+    }
+    &-text {
+        @apply mt-2 text-gray-80;
     }
 }
