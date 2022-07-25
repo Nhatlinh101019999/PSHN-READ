@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="relative">
         <div v-if="label" class="text-gray-80">
             {{ label }}
         </div>
@@ -12,6 +12,11 @@
             @keyup.native.enter="onSearch"
             @change="onChange"
         />
+        <span
+            class="absolute bg-success-100 text-white w-11 h-10 right-0 text-center rounded-r-sm cursor-pointer"
+            @click="onSearch"
+        >
+            <i class="fas fa-search !leading-10" /></span>
     </div>
 </template>
 
@@ -39,7 +44,7 @@
             },
             clearable: {
                 type: Boolean,
-                default: true,
+                default: false,
             },
         },
 

@@ -111,7 +111,7 @@
 
 // Input
 .ant-input, .ant-input-number {
-    @apply !rounded-lg;
+    @apply !rounded-sm;
     &-disabled {
         @apply !text-gray-100 !bg-white;
     }
@@ -225,7 +225,7 @@
         right: 5px;
         @apply relative;
     }
-    @apply !rounded-lg; 
+    @apply !rounded-sm; 
     
 }
 
@@ -253,4 +253,7 @@
     &-text {
         @apply mt-2 text-gray-80;
     }
+}
+.ant-popover {
+    @apply z-0;
 }

@@ -130,7 +130,16 @@
                                 ],
                             },
                             {
-                                id: '7.4', subTitle: 'Trắc nghiệm', link: '/', icon: 'fas fa-question',
+                                id: '7.4',
+                                subTitle: 'Trắc nghiệm',
+                                link: '/',
+                                icon: 'fas fa-question',
+                                subMenus: [
+                                    { id: '7.4.1', subTitle: 'Danh mục', link: '/utilities/questions/categories' },
+                                    {
+                                        id: '7.4.2', subTitle: 'Câu hỏi', link: '/utilities/questions',
+                                    },
+                                ],
                             },
                             {
                                 id: '7.5', subTitle: 'Checklist', link: '/', icon: 'fas fa-list-alt',
