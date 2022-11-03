@@ -9,12 +9,14 @@
                 class="w-full"
                 :allow-clear="allowClear"
                 :ranges="presetRanges"
-                :placeholder="['Từ ngày', 'Đến ngày']"
+                :placeholder="[placeholderFrom, placeholderTo]"
                 :size="size"
+                :mode="mode"
                 :default-value="defaultValue"
-                format="MM/DD/YYYY"
+                :format="format"
                 :value-format="valueFormat"
                 @change="onFilter"
+                @panelChange="changeDate"
             >
                 <a-icon slot="suffixIcon" type="calendar" />
             </a-range-picker>
@@ -26,7 +28,6 @@
     import moment from 'moment';
     import _assign from 'lodash/assign';
     import _omit from 'lodash/omit';
-    import _split from 'lodash/split';
 
     export default {
         model: {
@@ -34,8 +35,19 @@
         },
 
         props: {
-            query: String,
+            query: {
+                type: String,
+                default: '',
+            },
             label: String,
+            placeholderFrom: {
+                type: String,
+                default: 'From date',
+            },
+            placeholderTo: {
+                type: String,
+                default: 'To date',
+            },
             allowClear: {
                 type: Boolean,
                 default: true,
@@ -48,9 +60,9 @@
                 type: String,
                 default: 'default',
             },
-            separator: {
-                type: String,
-                default: '##TO##',
+            mode: {
+                type: [String, Array],
+                default: 'date',
             },
             prefix: {
                 type: String,
@@ -70,20 +82,20 @@
             },
             valueFormat: {
                 type: String,
-                default: 'x',
+                default: 'YYYY-MM-DD',
+            },
+            format: {
+                type: String,
+                default: 'DD/MM/YYYY',
             },
         },
 
         data() {
             let selectedValue = '';
-            if (this.separator) {
-                selectedValue = this.$route.query[this.query] ? _split(this.$route.query[this.query], this.separator, 2) : this.defaultValue;
-            } else {
-                selectedValue = [
-                    this.$route.query[`${this.query}${this.prefix}`],
-                    this.$route.query[`${this.query}${this.suffix}`],
-                ] || this.defaultValue;
-            }
+            selectedValue = [
+                this.$route.query[`${this.query}${this.prefix}`],
+                this.$route.query[`${this.query}${this.suffix}`],
+            ] || this.defaultValue;
 
             return {
                 selectedValue,
@@ -93,26 +105,21 @@
         computed: {
             presetRanges() {
                 return {
-                    'Hôm nay': [moment(), moment()],
-                    'Tuần này': [moment().startOf('isoWeek'), moment().endOf('isoWeek')],
-                    'Tháng này': [moment().startOf('month'), moment().endOf('month')],
-                    'Năm này': [moment().startOf('year'), moment().endOf('year')],
+                    Today: [moment(), moment()],
+                    'This week': [moment().startOf('isoWeek'), moment().endOf('isoWeek')],
+                    'This month': [moment().startOf('month'), moment().endOf('month')],
+                    'This year': [moment().startOf('year'), moment().endOf('year')],
                 };
             },
         },
 
         watch: {
             '$route.query': {
-                handler(query) {
-                    let dates = [];
-                    if (this.separator) {
-                        dates = _split(query[this.query], this.separator, 2);
-                    } else {
-                        dates = [
-                            this.$route.query[`${this.query}${this.prefix}`],
-                            this.$route.query[`${this.query}${this.suffix}`],
-                        ] || [];
-                    }
+                handler() {
+                    const dates = [
+                        this.$route.query[`${this.query}${this.prefix}`],
+                        this.$route.query[`${this.query}${this.suffix}`],
+                    ] || [];
                     this.$emit('input', dates);
                     this.selectValue = dates;
                 },
@@ -136,14 +143,10 @@
                     if (this.customHandler) {
                         this.$emit('onChange', { from, to });
                     } else {
-                        const query = this.separator
-                            ? {
-                                [this.query]: `${from}${this.separator}${to}`,
-                            }
-                            : {
-                                [`${this.query}${this.prefix}`]: from,
-                                [`${this.query}${this.suffix}`]: to,
-                            };
+                        const query = {
+                            [`${this.query}${this.prefix}`]: from,
+                            [`${this.query}${this.suffix}`]: to,
+                        };
 
                         this.$router.push({
                             query: _assign({}, this.$route.query, query),
@@ -156,6 +159,13 @@
                 this.$router.push({
                     query: _assign({}, _omit(this.$route.query, [`${this.query}${this.prefix}`, `${this.query}${this.suffix}`]), {}),
                 });
+            },
+
+            changeDate(value) {
+                if (this.mode !== 'date') {
+                    this.selectedValue = [value[0].format('YYYY'), value[1].format('YYYY')];
+                    this.onFilter(this.selectedValue, [`${value[0].format('YYYY')}`, `${value[1].format('YYYY')}`]);
+                }
             },
         },
     };

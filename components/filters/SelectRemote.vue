@@ -7,7 +7,7 @@
             v-model="selectValue"
             class="w-full"
             :class="[bordered ? '' : 'border-0']"
-            show-search
+            :show-search="showSearch"
             :bordered="bordered"
             :loading="loading"
             :mode="mode"
@@ -20,6 +20,7 @@
             :not-found-content="null"
             @change="handleSelect"
             @search="handleSearch"
+            @popupScroll="loadMore"
         >
             <a-select-option v-for="(item, index) in options" :key="`${storeProp}-${index}`" :value="item.value">
                 {{ item.label }}
@@ -35,7 +36,9 @@
     import _omit from 'lodash/omit';
     import _map from 'lodash/map';
     import _join from 'lodash/join';
+    import _remove from 'lodash/remove';
     import _split from 'lodash/split';
+    import _uniqBy from 'lodash/uniqBy';
     import { mapState } from 'vuex';
 
     export default {
@@ -53,6 +56,10 @@
                 type: Boolean,
                 default: true,
             },
+            showSearch: {
+                type: Boolean,
+                default: true,
+            },
             defaultFirst: {
                 type: Boolean,
                 default: false,
@@ -67,7 +74,7 @@
             },
             searchKey: {
                 type: String,
-                default: 'keyWord',
+                default: 'freeWord',
             },
             size: {
                 type: String,
@@ -95,6 +102,10 @@
                 type: String,
                 default: 'default',
             },
+            params: {
+                type: Object,
+                default: () => {},
+            },
             bordered: {
                 type: Boolean,
                 default: true,
@@ -120,14 +131,18 @@
         },
 
         data() {
+            const value = this.value === null ? undefined : this.value;
+
             const defaultValue = this.router
                 ? this.$route.query[this.query] || undefined
-                : this.value;
+                : value;
 
             return {
                 data: [],
                 options: [],
+                page: 1,
                 selectionItems: [],
+                dataState: [],
                 isSelectedAll: false,
                 loading: false,
                 fetchDebounce: null,
@@ -162,19 +177,43 @@
             },
 
             value(data) {
-                this.selectValue = data;
+                this.selectValue = data === null ? undefined : data;
             },
+
+            async autoFetch() {
+                if (this.autoFetch) {
+                    await this.fetchData();
+                }
+            },
+
+            customOptions() {
+                this.selectionItems = _uniqBy([...this.selectionItems, ...this.customOptions, ...this.state], 'id');
+            },
+
+            selectionItems() {
+                this.options = _map(this.selectionItems, (option) => ({
+                    label: _get(option, this.optionLabel),
+                    value: _get(option, this.optionValue),
+                }));
+                _remove(this.options, (option) => !option.label || !option.value);
+            },
+
         },
 
         async mounted() {
             if (this.autoFetch) {
                 await this.fetchData();
-                if (this.defaultFirst) {
-                    this.$emit('input', this.options[0]?.value);
-                }
+            }
+            if (this.defaultFirst) {
+                this.$emit('input', this.options[0]?.value);
             }
 
-            this.selectionItems = [...this.customOptions, ...this.state];
+            this.selectionItems = _uniqBy([...this.customOptions, ...this.state], 'id');
+            this.options = _map(this.selectionItems, (option) => ({
+                label: _get(option, this.optionLabel),
+                value: _get(option, this.optionValue),
+            }));
+            _remove(this.options, (option) => !option.label || !option.value);
         },
 
         methods: {
@@ -184,26 +223,23 @@
                     if (this.fetchUrl) {
                         await this.$store.dispatch(this.fetchUrl, {
                             ...this.searchParams,
-                            query: {
-                                [this.searchKey]: searchStr,
-                                ...this.searchParams?.query,
-                                ...params,
-                            },
+                            ...params,
+                            ...this.params,
+                            [this.searchKey]: searchStr,
+                            ...this.searchParams?.query,
                         });
                     }
-                    this.selectionItems = [...this.customOptions, ...this.state];
-
-                    this.options = _map(this.selectionItems, (option) => ({
-                        label: _get(option, this.optionLabel),
-                        value: _get(option, this.optionValue),
-                    }));
+                    if (searchStr) {
+                        this.selectionItems = _uniqBy([...this.customOptions, ...this.state], 'id');
+                    } else {
+                        this.selectionItems = _uniqBy([...this.selectionItems, ...this.customOptions, ...this.state], 'id');
+                    }
                 } catch (error) {
                     this.$handleError(error);
                 } finally {
                     this.loading = false;
                 }
             },
-
             async selectAll() {
                 const allValue = _map(this.options, 'value');
                 await this.$emit('input', allValue);
@@ -220,13 +256,13 @@
                         this.$router.push({
                             query: _assign({}, this.$route.query, {
                                 [this.query]: queryValue,
-                                start: 0,
+                                page: 1,
                             }),
                         });
                     } else {
                         this.$router.push({
                             query: _assign({}, _omit(this.$route.query, [this.query]), {
-                                start: 0,
+                                page: 1,
                             }),
                         });
                     }
@@ -249,6 +285,17 @@
                 }, 200);
                 await this.fetchDebounce();
                 await this.$forceUpdate();
+            },
+
+            async loadMore(e) {
+                const { scrollTop, clientHeight, scrollHeight } = e.target;
+                if (!this.loading && Math.ceil(scrollTop + clientHeight) === scrollHeight) {
+                    this.page += 1;
+                    this.fetchData('', { page: this.page });
+                }
+            },
+            async handleDeleteItem() {
+                _remove(this.selectionItems, (option) => !!option.title || !!option.id);
             },
         },
     };

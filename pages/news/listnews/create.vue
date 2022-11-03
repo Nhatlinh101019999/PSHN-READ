@@ -2,15 +2,15 @@
     <div class="questions-box">
         <div class="mt-2.5 border-b-[1px] border-solid border-gray-40 pb-10">
             <div class="font-bold title">
-                Chỉnh sửa câu hỏi
+                Thêm bài viết mới
             </div>
         </div>
-        <Form ref="questionForm" :question="dataSoucre" @submit="editQuestion" />
+        <Form />
         <div class="text-right">
             <a-button
                 type="default"
                 class="title-button transperant-btn mr-3"
-                @click="$router.push('/utilities/questions')"
+                @click="$router.push('news/listnews')"
             >
                 Hủy bỏ
             </a-button>
@@ -20,46 +20,35 @@
                 :loading="loading"
                 @click="$refs.questionForm.submit()"
             >
-                Cập nhật câu hỏi
+                Đồng ý
             </a-button>
         </div>
     </div>
 </template>
 <script>
-    import Form from '@/components/utilities/questions/Form.vue';
-    import { mapState } from 'vuex';
+    import Form from '../../../components/news/Form.vue';
 
     export default {
         components: {
             Form,
-        },
-        async asyncData({ store, params }) {
-            await store.dispatch('patient/fetchPatient');
-            await store.dispatch('patient/fetchDetailPatients', params?.id);
         },
         data() {
             return {
                 loading: false,
             };
         },
-        computed: {
-            ...mapState('questions', ['detailQuestion']),
-            dataSoucre() {
-                return this.detailQuestion;
-            },
-        },
         methods: {
             async editQuestion(form) {
                 try {
                     this.loading = true;
-                    await this.$api.questions.update(+form.id, {
+                    await this.$api.questions.create({
                         ...form,
                     });
-                    this.$message.success('Chỉnh sửa câu hỏi thành công');
+                    this.$message.success('Tạo mới câu hỏi thành công');
                     this.$router.push('/utilities/questions');
                     this.$nuxt.refresh();
                 } catch {
-                    this.$message.error('Chỉnh sửa câu hỏi thất bại');
+                    this.$message.error('Tạo mới câu hỏi thất bại');
                 } finally {
                     this.loading = false;
                 }

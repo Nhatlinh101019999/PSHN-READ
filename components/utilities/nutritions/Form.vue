@@ -75,6 +75,7 @@
             async handleChange(info) {
                 if (info.file.status === 'uploading') {
                     this.loading = true;
+                    console.log(info);
                     return;
                 }
                 if (info.file.status === 'done') {

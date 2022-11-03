@@ -99,11 +99,10 @@ export default {
         strategies: {
             local: {
                 token: {
-                    property: 'data.accessToken',
+                    property: 'data.token.access_token',
                     global: true,
                     required: true,
                     maxAge: 60 * 60 * 24 * 30, // 1 month
-                    type: 'Bearer',
                 },
                 autoLogout: false,
                 user: {
